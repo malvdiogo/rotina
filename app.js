@@ -4,6 +4,10 @@
 
 class TaskManager {
     constructor() {
+        this.storageAvailable = this.isStorageAvailable();
+        if (!this.storageAvailable) {
+            console.error('LocalStorage não disponível ao inicializar');
+        }
         this.tasks = this.loadTasks();
         this.settings = this.loadSettings();
         this.currentDate = new Date();
@@ -14,19 +18,74 @@ class TaskManager {
     }
 
     // LocalStorage operations
+    isStorageAvailable() {
+        try {
+            const test = '__storage_test__';
+            localStorage.setItem(test, test);
+            localStorage.removeItem(test);
+            return true;
+        } catch (e) {
+            console.error('LocalStorage não disponível:', e);
+            return false;
+        }
+    }
+
     loadTasks() {
-        const stored = localStorage.getItem('tasks');
-        return stored ? JSON.parse(stored) : [];
+        if (!this.isStorageAvailable()) {
+            console.warn('LocalStorage não disponível, usando memória temporária');
+            return [];
+        }
+        
+        try {
+            const stored = localStorage.getItem('tasks');
+            if (stored) {
+                const tasks = JSON.parse(stored);
+                console.log('Tarefas carregadas:', tasks.length);
+                return tasks;
+            }
+        } catch (e) {
+            console.error('Erro ao carregar tarefas:', e);
+        }
+        return [];
     }
 
     saveTasks() {
-        localStorage.setItem('tasks', JSON.stringify(this.tasks));
-        this.updateSummary();
+        if (!this.isStorageAvailable()) {
+            console.error('LocalStorage não disponível - dados não serão salvos!');
+            this.showStorageError();
+            return false;
+        }
+        
+        try {
+            localStorage.setItem('tasks', JSON.stringify(this.tasks));
+            this.updateSummary();
+            console.log('Tarefas salvas:', this.tasks.length);
+            return true;
+        } catch (e) {
+            console.error('Erro ao salvar tarefas:', e);
+            this.showStorageError();
+            return false;
+        }
     }
 
     loadSettings() {
-        const stored = localStorage.getItem('settings');
-        return stored ? JSON.parse(stored) : {
+        if (!this.isStorageAvailable()) {
+            return {
+                theme: 'light',
+                notificationsEnabled: false,
+                soundEnabled: true
+            };
+        }
+        
+        try {
+            const stored = localStorage.getItem('settings');
+            if (stored) {
+                return JSON.parse(stored);
+            }
+        } catch (e) {
+            console.error('Erro ao carregar configurações:', e);
+        }
+        return {
             theme: 'light',
             notificationsEnabled: false,
             soundEnabled: true
@@ -34,7 +93,83 @@ class TaskManager {
     }
 
     saveSettings() {
-        localStorage.setItem('settings', JSON.stringify(this.settings));
+        if (!this.isStorageAvailable()) {
+            console.error('LocalStorage não disponível - configurações não serão salvas!');
+            return false;
+        }
+        
+        try {
+            localStorage.setItem('settings', JSON.stringify(this.settings));
+            console.log('Configurações salvas');
+            return true;
+        } catch (e) {
+            console.error('Erro ao salvar configurações:', e);
+            return false;
+        }
+    }
+
+    showStorageError() {
+        const existingError = document.querySelector('.storage-error');
+        if (existingError) return;
+        
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'storage-error';
+        errorDiv.style.cssText = `
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #EF4444;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 10000;
+            font-size: 14px;
+            max-width: 400px;
+            text-align: center;
+        `;
+        errorDiv.innerHTML = `
+            <strong>⚠️ Erro de Armazenamento</strong><br>
+            O LocalStorage não está disponível. Verifique se você está em modo privado ou se as configurações do navegador bloqueiam cookies.
+        `;
+        document.body.appendChild(errorDiv);
+        
+        setTimeout(() => errorDiv.remove(), 10000);
+    }
+
+    showSuccessNotification(message) {
+        const existingNotification = document.querySelector('.success-notification');
+        if (existingNotification) existingNotification.remove();
+        
+        const notificationDiv = document.createElement('div');
+        notificationDiv.className = 'success-notification';
+        notificationDiv.style.cssText = `
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #10B981;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 10000;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            animation: slideIn 0.3s ease-out;
+        `;
+        notificationDiv.innerHTML = `
+            <span>✓</span>
+            <span>${message}</span>
+        `;
+        document.body.appendChild(notificationDiv);
+        
+        setTimeout(() => {
+            notificationDiv.style.animation = 'slideOut 0.3s ease-out';
+            setTimeout(() => notificationDiv.remove(), 300);
+        }, 2000);
     }
 
     // Task CRUD operations
@@ -56,7 +191,9 @@ class TaskManager {
             createdAt: new Date().toISOString()
         };
         this.tasks.push(newTask);
-        this.saveTasks();
+        if (this.saveTasks()) {
+            this.showSuccessNotification('Tarefa criada com sucesso!');
+        }
         return newTask;
     }
 
@@ -64,7 +201,9 @@ class TaskManager {
         const index = this.tasks.findIndex(t => t.id === id);
         if (index !== -1) {
             this.tasks[index] = { ...this.tasks[index], ...updates };
-            this.saveTasks();
+            if (this.saveTasks()) {
+                this.showSuccessNotification('Tarefa atualizada com sucesso!');
+            }
             return this.tasks[index];
         }
         return null;
@@ -72,7 +211,9 @@ class TaskManager {
 
     deleteTask(id) {
         this.tasks = this.tasks.filter(t => t.id !== id);
-        this.saveTasks();
+        if (this.saveTasks()) {
+            this.showSuccessNotification('Tarefa excluída com sucesso!');
+        }
     }
 
     completeTask(id) {
@@ -90,7 +231,9 @@ class TaskManager {
                 }
             }
             
-            this.saveTasks();
+            if (this.saveTasks()) {
+                this.showSuccessNotification('Tarefa concluída com sucesso!');
+            }
         }
     }
 
@@ -99,7 +242,9 @@ class TaskManager {
         if (task) {
             task.completed = false;
             task.completedAt = null;
-            this.saveTasks();
+            if (this.saveTasks()) {
+                this.showSuccessNotification('Tarefa reaberta com sucesso!');
+            }
         }
     }
 
@@ -110,7 +255,9 @@ class TaskManager {
             task.time = newTime;
             task.notified = false;
             task.lastReminder = null;
-            this.saveTasks();
+            if (this.saveTasks()) {
+                this.showSuccessNotification('Tarefa reagendada com sucesso!');
+            }
         }
     }
 
@@ -477,9 +624,18 @@ class UIController {
     init() {
         this.setupEventListeners();
         this.applyTheme();
+        this.checkStorageStatus();
         this.render();
         this.checkNotificationPermission();
         this.notificationSystem.startNotificationCheck();
+    }
+
+    checkStorageStatus() {
+        if (!this.taskManager.storageAvailable) {
+            this.taskManager.showStorageError();
+        } else {
+            console.log('LocalStorage está disponível e funcionando');
+        }
     }
 
     setupEventListeners() {
