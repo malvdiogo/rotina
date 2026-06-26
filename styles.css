@@ -1,0 +1,1052 @@
+/* ===================================
+   Design System & Color Palette
+   =================================== */
+:root {
+    /* Light mode colors */
+    --bg-primary: #F4F1EA;
+    --bg-secondary: #FFFFFF;
+    --bg-card: #FFFFFF;
+    --text-primary: #1A1A1A;
+    --text-secondary: #6B6B6B;
+    --text-muted: #9A9A9A;
+    
+    /* Accent color - Dark Pet Green */
+    --accent: #2D5A3D;
+    --accent-hover: #244A32;
+    --accent-light: rgba(45, 90, 61, 0.1);
+    
+    /* Status colors */
+    --success: #10B981;
+    --warning: #F59E0B;
+    --error: #EF4444;
+    --info: #3B82F6;
+    
+    /* Border and shadow */
+    --border: #E5E5E5;
+    --border-subtle: #F0F0F0;
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.12);
+    
+    /* Spacing */
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 32px;
+    
+    /* Border radius */
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-full: 9999px;
+    
+    /* Transitions */
+    --transition-fast: 150ms ease;
+    --transition-normal: 250ms ease;
+}
+
+/* Dark mode colors */
+[data-theme="dark"] {
+    --bg-primary: #1A1A1A;
+    --bg-secondary: #2A2A2A;
+    --bg-card: #2A2A2A;
+    --text-primary: #F4F1EA;
+    --text-secondary: #B8B8B8;
+    --text-muted: #7A7A7A;
+    --border: #3A3A3A;
+    --border-subtle: #333333;
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.5);
+}
+
+/* ===================================
+   Base Styles
+   =================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.5;
+    min-height: 100vh;
+    transition: background-color var(--transition-normal), color var(--transition-normal);
+}
+
+button {
+    font-family: inherit;
+    cursor: pointer;
+    border: none;
+    background: none;
+}
+
+input, textarea, select {
+    font-family: inherit;
+    font-size: 14px;
+}
+
+/* ===================================
+   App Container
+   =================================== */
+.app-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: var(--spacing-lg);
+    min-height: 100vh;
+}
+
+/* ===================================
+   Header
+   =================================== */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-xl);
+    padding-bottom: var(--spacing-md);
+    border-bottom: 1px solid var(--border);
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+.app-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.status-indicator {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    background-color: var(--success);
+    border-radius: var(--radius-full);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.header-right {
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
+.theme-toggle {
+    font-size: 20px;
+    padding: var(--spacing-sm);
+    border-radius: var(--radius-md);
+    transition: background-color var(--transition-fast);
+}
+
+.theme-toggle:hover {
+    background-color: var(--accent-light);
+}
+
+.header-btn {
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: 13px;
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    transition: all var(--transition-fast);
+}
+
+.header-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+/* ===================================
+   Notification Banner
+   =================================== */
+.notification-banner {
+    background-color: var(--accent);
+    color: white;
+    padding: var(--spacing-md);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--spacing-lg);
+    animation: slideDown var(--transition-normal);
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.notification-banner.hidden {
+    display: none;
+}
+
+.banner-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-md);
+}
+
+.banner-text {
+    flex: 1;
+    font-size: 14px;
+}
+
+.banner-btn {
+    padding: var(--spacing-xs) var(--spacing-md);
+    background-color: white;
+    color: var(--accent);
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 600;
+    transition: background-color var(--transition-fast);
+}
+
+.banner-btn:hover {
+    background-color: var(--accent-light);
+}
+
+.banner-close {
+    font-size: 18px;
+    color: white;
+    opacity: 0.8;
+    transition: opacity var(--transition-fast);
+}
+
+.banner-close:hover {
+    opacity: 1;
+}
+
+/* ===================================
+   Summary Cards
+   =================================== */
+.summary-cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-xl);
+}
+
+.summary-card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-md);
+    text-align: center;
+    transition: box-shadow var(--transition-fast);
+}
+
+.summary-card:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.summary-number {
+    display: block;
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1;
+}
+
+.summary-label {
+    display: block;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-secondary);
+    margin-top: var(--spacing-xs);
+}
+
+.summary-card.overdue .summary-number {
+    color: var(--error);
+}
+
+.summary-card.completed .summary-number {
+    color: var(--success);
+}
+
+/* ===================================
+   View Navigation
+   =================================== */
+.view-nav {
+    display: flex;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-lg);
+}
+
+.nav-btn {
+    flex: 1;
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-full);
+    transition: all var(--transition-fast);
+}
+
+.nav-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.nav-btn.active {
+    background-color: var(--accent);
+    color: white;
+    border-color: var(--accent);
+}
+
+/* ===================================
+   Filters
+   =================================== */
+.filters {
+    display: flex;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-lg);
+}
+
+.filter-select {
+    flex: 1;
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: 14px;
+    color: var(--text-primary);
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: border-color var(--transition-fast);
+}
+
+.filter-select:hover {
+    border-color: var(--accent);
+}
+
+.filter-select:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+/* ===================================
+   Main Content
+   =================================== */
+.main-content {
+    min-height: 400px;
+}
+
+.view {
+    display: none;
+}
+
+.view.active {
+    display: block;
+}
+
+/* ===================================
+   Date Header
+   =================================== */
+.date-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+}
+
+.date-header h2 {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.nav-arrow {
+    font-size: 24px;
+    color: var(--text-secondary);
+    padding: var(--spacing-sm);
+    border-radius: var(--radius-md);
+    transition: all var(--transition-fast);
+}
+
+.nav-arrow:hover {
+    background-color: var(--accent-light);
+    color: var(--accent);
+}
+
+/* ===================================
+   Task List
+   =================================== */
+.task-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.task-item {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-md);
+    transition: all var(--transition-fast);
+}
+
+.task-item:hover {
+    box-shadow: var(--shadow-sm);
+}
+
+.task-item.completed {
+    opacity: 0.6;
+}
+
+.task-item.completed .task-title {
+    text-decoration: line-through;
+    color: var(--text-muted);
+}
+
+.task-item.overdue {
+    border-left: 3px solid var(--error);
+}
+
+.task-item.overdue .task-title {
+    color: var(--error);
+}
+
+.task-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-sm);
+}
+
+.task-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+    flex: 1;
+}
+
+.task-time {
+    font-size: 13px;
+    color: var(--text-secondary);
+    white-space: nowrap;
+}
+
+.task-description {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-sm);
+}
+
+.task-meta {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-sm);
+}
+
+.task-category {
+    font-size: 12px;
+    padding: 2px 8px;
+    border-radius: var(--radius-full);
+    color: white;
+}
+
+.task-repeat {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.task-actions {
+    display: flex;
+    gap: var(--spacing-xs);
+    flex-wrap: wrap;
+}
+
+.task-action-btn {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: 13px;
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    transition: all var(--transition-fast);
+}
+
+.task-action-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.task-action-btn.complete:hover {
+    border-color: var(--success);
+    color: var(--success);
+}
+
+.task-action-btn.delete:hover {
+    border-color: var(--error);
+    color: var(--error);
+}
+
+/* ===================================
+   Calendar
+   =================================== */
+.calendar-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-md);
+}
+
+.calendar-header h2 {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.calendar-view-toggle {
+    display: flex;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+}
+
+.calendar-view-btn {
+    padding: var(--spacing-xs) var(--spacing-md);
+    font-size: 13px;
+    color: var(--text-secondary);
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    transition: all var(--transition-fast);
+}
+
+.calendar-view-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.calendar-view-btn.active {
+    background-color: var(--accent);
+    color: white;
+    border-color: var(--accent);
+}
+
+#calendar-container {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-md);
+}
+
+.calendar {
+    width: 100%;
+}
+
+.calendar-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: var(--spacing-xs);
+    margin-bottom: var(--spacing-xs);
+}
+
+.calendar-weekday {
+    text-align: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    padding: var(--spacing-sm);
+}
+
+.calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: var(--spacing-xs);
+}
+
+.calendar-day {
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: var(--text-primary);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    position: relative;
+}
+
+.calendar-day:hover {
+    background-color: var(--accent-light);
+}
+
+.calendar-day.other-month {
+    color: var(--text-muted);
+}
+
+.calendar-day.today {
+    background-color: var(--accent);
+    color: white;
+}
+
+.calendar-day.selected {
+    background-color: var(--accent);
+    color: white;
+}
+
+.calendar-day.has-task::after {
+    content: '';
+    position: absolute;
+    bottom: 4px;
+    width: 4px;
+    height: 4px;
+    background-color: var(--accent);
+    border-radius: var(--radius-full);
+}
+
+.calendar-day.today.has-task::after {
+    background-color: white;
+}
+
+.calendar-day.holiday {
+    color: var(--error);
+}
+
+.calendar-day.holiday::before {
+    content: '';
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 4px;
+    height: 4px;
+    background-color: var(--error);
+    border-radius: var(--radius-full);
+}
+
+.calendar-day.today.holiday {
+    color: white;
+}
+
+.calendar-day.today.holiday::before {
+    background-color: white;
+}
+
+/* Weekly Calendar */
+.weekly-calendar {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.week-day {
+    display: flex;
+    gap: var(--spacing-md);
+    padding: var(--spacing-sm);
+    background-color: var(--bg-secondary);
+    border-radius: var(--radius-sm);
+}
+
+.week-day-header {
+    width: 80px;
+    flex-shrink: 0;
+    text-align: center;
+}
+
+.week-day-name {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.week-day-date {
+    font-size: 14px;
+    color: var(--text-primary);
+}
+
+.week-day.today .week-day-date {
+    color: var(--accent);
+    font-weight: 600;
+}
+
+.week-day-tasks {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.week-task {
+    font-size: 13px;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    background-color: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+}
+
+.week-task.completed {
+    text-decoration: line-through;
+    opacity: 0.6;
+}
+
+.week-task.overdue {
+    border-left: 2px solid var(--error);
+    color: var(--error);
+}
+
+/* ===================================
+   Section Title
+   =================================== */
+.section-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-lg);
+}
+
+/* ===================================
+   Floating Action Button
+   =================================== */
+.fab {
+    position: fixed;
+    bottom: var(--spacing-xl);
+    right: var(--spacing-xl);
+    width: 56px;
+    height: 56px;
+    font-size: 28px;
+    font-weight: 300;
+    color: white;
+    background-color: var(--accent);
+    border-radius: var(--radius-full);
+    box-shadow: var(--shadow-lg);
+    transition: all var(--transition-fast);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.fab:hover {
+    background-color: var(--accent-hover);
+    transform: scale(1.05);
+}
+
+.fab:active {
+    transform: scale(0.95);
+}
+
+/* ===================================
+   Modal
+   =================================== */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    animation: fadeIn var(--transition-fast);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.modal.hidden {
+    display: none;
+}
+
+.modal-content {
+    background-color: var(--bg-card);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    width: 100%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: var(--shadow-lg);
+    animation: slideUp var(--transition-normal);
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-lg);
+}
+
+.modal-header h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.modal-close {
+    font-size: 20px;
+    color: var(--text-secondary);
+    padding: var(--spacing-xs);
+    border-radius: var(--radius-sm);
+    transition: all var(--transition-fast);
+}
+
+.modal-close:hover {
+    background-color: var(--accent-light);
+    color: var(--accent);
+}
+
+/* ===================================
+   Task Form
+   =================================== */
+.task-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.form-group label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    padding: var(--spacing-sm) var(--spacing-md);
+    color: var(--text-primary);
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    transition: border-color var(--transition-fast);
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-md);
+}
+
+.days-selector {
+    display: flex;
+    gap: var(--spacing-sm);
+    flex-wrap: wrap;
+}
+
+.days-selector label {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    font-size: 13px;
+    color: var(--text-primary);
+    cursor: pointer;
+}
+
+.days-selector input[type="checkbox"] {
+    cursor: pointer;
+}
+
+.color-picker {
+    display: flex;
+    gap: var(--spacing-sm);
+    flex-wrap: wrap;
+}
+
+.color-picker input[type="radio"] {
+    display: none;
+}
+
+.color-option {
+    width: 28px;
+    height: 28px;
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all var(--transition-fast);
+}
+
+.color-picker input[type="radio"]:checked + .color-option {
+    border-color: var(--text-primary);
+    transform: scale(1.1);
+}
+
+.form-actions {
+    display: flex;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-md);
+}
+
+.btn-primary {
+    flex: 1;
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: 14px;
+    font-weight: 600;
+    color: white;
+    background-color: var(--accent);
+    border-radius: var(--radius-md);
+    transition: background-color var(--transition-fast);
+}
+
+.btn-primary:hover {
+    background-color: var(--accent-hover);
+}
+
+.btn-secondary {
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: 14px;
+    color: var(--text-secondary);
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    transition: all var(--transition-fast);
+}
+
+.btn-secondary:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+/* ===================================
+   Holiday Tooltip
+   =================================== */
+.holiday-tooltip {
+    position: fixed;
+    background-color: var(--text-primary);
+    color: var(--bg-primary);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    z-index: 1001;
+    pointer-events: none;
+    animation: fadeIn var(--transition-fast);
+}
+
+.holiday-tooltip.hidden {
+    display: none;
+}
+
+/* ===================================
+   Utility Classes
+   =================================== */
+.hidden {
+    display: none !important;
+}
+
+/* ===================================
+   Responsive Design
+   =================================== */
+@media (max-width: 768px) {
+    .app-container {
+        padding: var(--spacing-md);
+    }
+
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-md);
+    }
+
+    .header-right {
+        width: 100%;
+        justify-content: flex-end;
+    }
+
+    .summary-cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .filters {
+        flex-direction: column;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .fab {
+        bottom: var(--spacing-md);
+        right: var(--spacing-md);
+    }
+
+    .calendar-weekday {
+        font-size: 11px;
+        padding: var(--spacing-xs);
+    }
+
+    .calendar-day {
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 480px) {
+    .summary-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .view-nav {
+        flex-direction: column;
+    }
+
+    .task-actions {
+        width: 100%;
+    }
+
+    .task-action-btn {
+        flex: 1;
+        text-align: center;
+    }
+}

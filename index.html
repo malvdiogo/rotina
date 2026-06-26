@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minha Rotina</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <h1 class="app-title">Minha Rotina</h1>
+                <div class="status-indicator">
+                    <span class="status-dot"></span>
+                    <span class="status-text">Online</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <button id="theme-toggle" class="theme-toggle" title="Alternar tema">☀️</button>
+                <button id="backup-btn" class="header-btn" title="Backup">Backup</button>
+                <button id="restore-btn" class="header-btn" title="Restaurar">Restaurar</button>
+            </div>
+        </header>
+
+        <!-- Notification Permission Banner -->
+        <div id="notification-banner" class="notification-banner hidden">
+            <div class="banner-content">
+                <span class="banner-text">Ative as notificações para receber lembretes das suas tarefas</span>
+                <button id="enable-notifications" class="banner-btn">Ativar</button>
+                <button id="dismiss-banner" class="banner-close">✕</button>
+            </div>
+        </div>
+
+        <!-- Summary Cards -->
+        <section class="summary-cards">
+            <div class="summary-card">
+                <span class="summary-number" id="today-count">0</span>
+                <span class="summary-label">Hoje</span>
+            </div>
+            <div class="summary-card">
+                <span class="summary-number" id="pending-count">0</span>
+                <span class="summary-label">Pendentes</span>
+            </div>
+            <div class="summary-card overdue">
+                <span class="summary-number" id="overdue-count">0</span>
+                <span class="summary-label">Atrasadas</span>
+            </div>
+            <div class="summary-card completed">
+                <span class="summary-number" id="completed-count">0</span>
+                <span class="summary-label">Concluídas</span>
+            </div>
+        </section>
+
+        <!-- View Navigation -->
+        <nav class="view-nav">
+            <button class="nav-btn active" data-view="agenda">Agenda</button>
+            <button class="nav-btn" data-view="calendar">Calendário</button>
+            <button class="nav-btn" data-view="history">Histórico</button>
+        </nav>
+
+        <!-- Filters -->
+        <section class="filters">
+            <select id="category-filter" class="filter-select">
+                <option value="">Todas categorias</option>
+                <option value="trabalho">Trabalho</option>
+                <option value="saude">Saúde</option>
+                <option value="estudos">Estudos</option>
+                <option value="pessoal">Pessoal</option>
+            </select>
+            <select id="status-filter" class="filter-select">
+                <option value="">Todos status</option>
+                <option value="pending">Pendentes</option>
+                <option value="overdue">Atrasadas</option>
+                <option value="completed">Concluídas</option>
+            </select>
+        </section>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Agenda View -->
+            <section id="agenda-view" class="view active">
+                <div class="date-header">
+                    <button id="prev-day" class="nav-arrow">‹</button>
+                    <h2 id="current-date-display"></h2>
+                    <button id="next-day" class="nav-arrow">›</button>
+                </div>
+                <div id="agenda-tasks" class="task-list"></div>
+            </section>
+
+            <!-- Calendar View -->
+            <section id="calendar-view" class="view">
+                <div class="calendar-header">
+                    <button id="prev-month" class="nav-arrow">‹</button>
+                    <h2 id="calendar-month-display"></h2>
+                    <button id="next-month" class="nav-arrow">›</button>
+                </div>
+                <div class="calendar-view-toggle">
+                    <button class="calendar-view-btn active" data-calendar-view="month">Mês</button>
+                    <button class="calendar-view-btn" data-calendar-view="week">Semana</button>
+                </div>
+                <div id="calendar-container"></div>
+            </section>
+
+            <!-- History View -->
+            <section id="history-view" class="view">
+                <h2 class="section-title">Últimos 7 dias</h2>
+                <div id="history-tasks" class="task-list"></div>
+            </section>
+        </main>
+
+        <!-- Floating Action Button -->
+        <button id="add-task-btn" class="fab" title="Adicionar tarefa">+</button>
+    </div>
+
+    <!-- Task Modal -->
+    <div id="task-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">Nova Tarefa</h3>
+                <button id="close-modal" class="modal-close">✕</button>
+            </div>
+            <form id="task-form" class="task-form">
+                <input type="hidden" id="task-id">
+                
+                <div class="form-group">
+                    <label for="task-title">Título *</label>
+                    <input type="text" id="task-title" required placeholder="Ex: Reunião de equipe">
+                </div>
+
+                <div class="form-group">
+                    <label for="task-description">Descrição</label>
+                    <textarea id="task-description" rows="3" placeholder="Detalhes da tarefa (opcional)"></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="task-date">Data *</label>
+                        <input type="date" id="task-date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="task-time">Horário *</label>
+                        <input type="time" id="task-time" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="task-repeat">Repetição</label>
+                    <select id="task-repeat">
+                        <option value="none">Única</option>
+                        <option value="daily">Diária</option>
+                        <option value="weekly">Semanal</option>
+                        <option value="custom">Dias específicos</option>
+                    </select>
+                </div>
+
+                <div id="custom-days-container" class="form-group hidden">
+                    <label>Dias da semana</label>
+                    <div class="days-selector">
+                        <label><input type="checkbox" value="0"> D</label>
+                        <label><input type="checkbox" value="1"> S</label>
+                        <label><input type="checkbox" value="2"> T</label>
+                        <label><input type="checkbox" value="3"> Q</label>
+                        <label><input type="checkbox" value="4"> Q</label>
+                        <label><input type="checkbox" value="5"> S</label>
+                        <label><input type="checkbox" value="6"> S</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="task-category">Categoria</label>
+                    <select id="task-category">
+                        <option value="">Sem categoria</option>
+                        <option value="trabalho">Trabalho</option>
+                        <option value="saude">Saúde</option>
+                        <option value="estudos">Estudos</option>
+                        <option value="pessoal">Pessoal</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="task-color">Cor da categoria</label>
+                    <div class="color-picker">
+                        <input type="radio" name="task-color" value="#3B82F6" checked>
+                        <span class="color-option" style="background: #3B82F6"></span>
+                        <input type="radio" name="task-color" value="#10B981">
+                        <span class="color-option" style="background: #10B981"></span>
+                        <input type="radio" name="task-color" value="#F59E0B">
+                        <span class="color-option" style="background: #F59E0B"></span>
+                        <input type="radio" name="task-color" value="#EF4444">
+                        <span class="color-option" style="background: #EF4444"></span>
+                        <input type="radio" name="task-color" value="#8B5CF6">
+                        <span class="color-option" style="background: #8B5CF6"></span>
+                        <input type="radio" name="task-color" value="#EC4899">
+                        <span class="color-option" style="background: #EC4899"></span>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">Salvar</button>
+                    <button type="button" id="cancel-modal" class="btn-secondary">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Reschedule Modal -->
+    <div id="reschedule-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Reagendar Tarefa</h3>
+                <button id="close-reschedule-modal" class="modal-close">✕</button>
+            </div>
+            <form id="reschedule-form" class="task-form">
+                <input type="hidden" id="reschedule-task-id">
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="reschedule-date">Nova data</label>
+                        <input type="date" id="reschedule-date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="reschedule-time">Novo horário</label>
+                        <input type="time" id="reschedule-time" required>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">Reagendar</button>
+                    <button type="button" id="cancel-reschedule" class="btn-secondary">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Holiday Tooltip -->
+    <div id="holiday-tooltip" class="holiday-tooltip hidden"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
