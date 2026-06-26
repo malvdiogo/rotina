@@ -138,6 +138,36 @@ class TaskManager {
         setTimeout(() => errorDiv.remove(), 10000);
     }
 
+    showInfoNotification(message) {
+        const existingNotification = document.querySelector('.info-notification');
+        if (existingNotification) existingNotification.remove();
+        
+        const notificationDiv = document.createElement('div');
+        notificationDiv.className = 'info-notification';
+        notificationDiv.style.cssText = `
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #3B82F6;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 10000;
+            font-size: 14px;
+            max-width: 400px;
+            text-align: center;
+        `;
+        notificationDiv.innerHTML = `
+            <strong>ℹ️ Informação</strong><br>
+            ${message}
+        `;
+        document.body.appendChild(notificationDiv);
+        
+        setTimeout(() => notificationDiv.remove(), 3000);
+    }
+
     showSuccessNotification(message) {
         const existingNotification = document.querySelector('.success-notification');
         if (existingNotification) existingNotification.remove();
@@ -264,14 +294,7 @@ class TaskManager {
     clearActiveTasks() {
         const activeTasksCount = this.tasks.filter(t => !t.completed).length;
         if (activeTasksCount === 0) {
-            this.showStorageError();
-            const errorDiv = document.querySelector('.storage-error');
-            if (errorDiv) {
-                errorDiv.innerHTML = `
-                    <strong>ℹ️ Informação</strong><br>
-                    Não há tarefas ativas para excluir.
-                `;
-            }
+            this.showInfoNotification('Não há tarefas ativas para excluir.');
             return false;
         }
         
