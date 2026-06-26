@@ -261,6 +261,28 @@ class TaskManager {
         }
     }
 
+    clearActiveTasks() {
+        const activeTasksCount = this.tasks.filter(t => !t.completed).length;
+        if (activeTasksCount === 0) {
+            this.showStorageError();
+            const errorDiv = document.querySelector('.storage-error');
+            if (errorDiv) {
+                errorDiv.innerHTML = `
+                    <strong>ℹ️ Informação</strong><br>
+                    Não há tarefas ativas para excluir.
+                `;
+            }
+            return false;
+        }
+        
+        this.tasks = this.tasks.filter(t => t.completed);
+        if (this.saveTasks()) {
+            this.showSuccessNotification(`${activeTasksCount} tarefas ativas excluídas!`);
+            return true;
+        }
+        return false;
+    }
+
     // Get tasks for a specific date
     getTasksForDate(date) {
         const dateStr = this.formatDate(date);
@@ -694,6 +716,7 @@ class UIController {
         // Backup and restore
         document.getElementById('backup-btn').addEventListener('click', () => this.taskManager.backupData());
         document.getElementById('restore-btn').addEventListener('click', () => this.restoreData());
+        document.getElementById('clear-tasks-btn').addEventListener('click', () => this.clearActiveTasks());
         
         // Close modals on outside click
         document.getElementById('task-modal').addEventListener('click', (e) => {
@@ -783,6 +806,20 @@ class UIController {
             }
         };
         input.click();
+    }
+
+    clearActiveTasks() {
+        const activeTasksCount = this.taskManager.tasks.filter(t => !t.completed).length;
+        
+        if (activeTasksCount === 0) {
+            alert('Não há tarefas ativas para excluir.');
+            return;
+        }
+        
+        if (confirm(`Tem certeza que deseja excluir ${activeTasksCount} tarefa(s) ativa(s)?\n\nEsta ação não pode ser desfeita.`)) {
+            this.taskManager.clearActiveTasks();
+            this.render();
+        }
     }
 
     openTaskModal(task = null) {
